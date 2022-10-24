@@ -867,6 +867,18 @@ public class HdfsTable extends Table implements FeFsTable {
     // So calling getPermissions() on COS files make no sense. Assume all COS files have
     // READ_WRITE permissions.
     if (FileSystemUtil.isCOSFileSystem(fs)) return true;
+
+    // OSS
+    // Atomic operations: delete() and rename() are implemented by recursive 
+    // file-by-file operations. They take time at least proportional to the number of files,
+    // during which time partial updates may be visible. 
+    // delete() and rename() can not guarantee atomicity. If the operations are interrupted, 
+    // the filesystem is left in an intermediate state. File owner and group are persisted, 
+    // but the permissions model is not enforced. Authorization occurs at the level of the 
+    // entire Aliyun account via Aliyun Resource Access Management (Aliyun RAM).
+    // Directory last access time is not tracked.
+    // The append operation is not supported.
+    if (FileSystemUtil.isOSSFileSystem(fs)) return true;
     return false;
   }
 

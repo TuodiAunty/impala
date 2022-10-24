@@ -225,7 +225,7 @@ export IMPALA_HUDI_VERSION=0.5.0-incubating
 export IMPALA_KITE_VERSION=1.1.0
 export IMPALA_ORC_JAVA_VERSION=1.7.6
 export IMPALA_COS_VERSION=3.1.0-5.9.3
-
+export IMPALA_OSS_VERSION=3.1.1
 # When IMPALA_(CDP_COMPONENT)_URL are overridden, they may contain '$(platform_label)'
 # which will be substituted for the CDP platform label in bootstrap_toolchain.py
 unset IMPALA_HADOOP_URL
@@ -437,6 +437,10 @@ export COS_SECRET_ID="${COS_SECRET_ID-}"
 export COS_SECRET_KEY="${COS_SECRET_KEY-}"
 export COS_REGION="${COS_REGION-}"
 export COS_BUCKET="${COS_BUCKET-}"
+export OSS_ACCESS_KEY_ID="${OSS_ACCESS_KEY_ID-}"
+export OSS_SECRET_ACCESS_KEY="${OSS_SECRET_ACCESS_KEY-}"
+export OSS_ACCESS_ENDPOINT="${OSS_ACCESS_ENDPOINT-}"
+export OSS_BUCKET="${OSS_BUCKET-}"
 export HDFS_REPLICATION="${HDFS_REPLICATION-3}"
 export ISILON_NAMENODE="${ISILON_NAMENODE-}"
 # Internal and external interfaces that test cluster services will listen on. The
@@ -624,6 +628,26 @@ elif [ "${TARGET_FILESYSTEM}" = "cosn" ]; then
     return 1
   fi
   DEFAULT_FS="cosn://${COS_BUCKET}"
+  export DEFAULT_FS
+elif [ "${TARGET_FILESYSTEM}" = "oss" ]; then
+  # Basic error checking
+  if [[ "${OSS_ACCESS_KEY_ID}" = "" ]]; then
+    echo "OSS_ACCESS_KEY_ID cannot be an empty string for OSS"
+    return 1
+  fi
+  if [[ "${OSS_SECRET_ACCESS_KEY}" = "" ]]; then
+    echo "OSS_SECRET_ACCESS_KEY cannot be an empty string for OSS"
+    return 1
+  fi
+  if [[ "${OSS_ACCESS_ENDPOINT}" = "" ]]; then
+    echo "OSS_ACCESS_ENDPOINT cannot be an empty string for OSS"
+    return 1
+  fi
+  if [[ "${OSS_BUCKET}" = "" ]]; then
+    echo "OSS_BUCKET cannot be an empty string for OSS"
+    return 1
+  fi
+  DEFAULT_FS="oss://${OSS_BUCKET}"
   export DEFAULT_FS
 elif [ "${TARGET_FILESYSTEM}" = "isilon" ]; then
   if [ "${ISILON_NAMENODE}" = "" ]; then
@@ -892,6 +916,7 @@ echo "IMPALA_KUDU_VERSION     = $IMPALA_KUDU_VERSION"
 echo "IMPALA_RANGER_VERSION   = $IMPALA_RANGER_VERSION"
 echo "IMPALA_ICEBERG_VERSION  = $IMPALA_ICEBERG_VERSION"
 echo "IMPALA_COS_VERSION      = $IMPALA_COS_VERSION"
+echo "IMPALA_OSS_VERSION      = $IMPALA_OSS_VERSION"
 
 # Kerberos things.  If the cluster exists and is kerberized, source
 # the required environment.  This is required for any hadoop tool to

@@ -72,6 +72,7 @@ public class FileSystemUtil {
   public static final String SCHEME_ALLUXIO = "alluxio";
   public static final String SCHEME_GCS = "gs";
   public static final String SCHEME_COS = "cosn";
+  public static final String SCHEME_OSS = "oss";
   public static final String SCHEME_SFS = "sfs";
 
   /**
@@ -101,6 +102,7 @@ public class FileSystemUtil {
           .add(SCHEME_OFS)
           .add(SCHEME_GCS)
           .add(SCHEME_COS)
+          .add(SCHEME_OSS)
           .build();
 
   /**
@@ -117,6 +119,7 @@ public class FileSystemUtil {
           .add(SCHEME_OFS)
           .add(SCHEME_GCS)
           .add(SCHEME_COS)
+          .add(SCHEME_OSS)
           .build();
 
   /**
@@ -133,6 +136,7 @@ public class FileSystemUtil {
           .add(SCHEME_OFS)
           .add(SCHEME_GCS)
           .add(SCHEME_COS)
+          .add(SCHEME_OSS)
           .build();
 
   /**
@@ -429,6 +433,13 @@ public class FileSystemUtil {
   }
 
   /**
+   * Returns true iff the filesystem is a OssFileSystem.
+   */
+  public static boolean isOSSFileSystem(FileSystem fs) {
+    return hasScheme(fs, SCHEME_OSS);
+  }
+
+  /**
    * Returns true iff the filesystem is AdlFileSystem.
    */
   public static boolean isADLFileSystem(FileSystem fs) {
@@ -538,6 +549,7 @@ public class FileSystemUtil {
     ALLUXIO,
     GCS,
     COS,
+    OSS,
     SFS;
 
     private static final Map<String, FsType> SCHEME_TO_FS_MAPPING =
@@ -553,6 +565,7 @@ public class FileSystemUtil {
             .put(SCHEME_ALLUXIO, ALLUXIO)
             .put(SCHEME_GCS, GCS)
             .put(SCHEME_COS, COS)
+            .put(SCHEME_OSS, OSS)
             .build();
 
     /**

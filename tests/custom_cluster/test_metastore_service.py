@@ -1202,7 +1202,7 @@ class TestMetastoreService(CustomClusterTestSuite):
       assert obj_dict is not None
       # obj_dict will only be populated when the table is on HDFS
       # where block locations are available.
-      if not IS_S3 and not IS_GCS and not IS_COS and not IS_ADLS:
+      if not IS_S3 and not IS_GCS and not IS_COS and not IS_ADLS and not IS_OSS:
         assert len(obj_dict.values) > 0
 
     def __assert_no_filemd(self, filemetadata, obj_dict):

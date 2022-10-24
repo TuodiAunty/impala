@@ -104,6 +104,8 @@ public class ExplainTest extends FrontendTestBase {
         dummyTblPath + "/dummy-part-9", FileSystemUtil.FsType.HDFS));
     partitions.add(createMockHdfsPartition(
         dummyTblPath + "/dummy-part-10", FileSystemUtil.FsType.HDFS));
+    partitions.add(createMockHdfsPartition("oss://dummy-account/dummy-part-11",
+        FileSystemUtil.FsType.OSS));
 
     HdfsScanNode hdfsScanNode =
         new HdfsScanNode(PlanNodeId.createGenerator().getNextId(), tupleDescriptor,
@@ -129,6 +131,8 @@ public class ExplainTest extends FrontendTestBase {
         explainString.get(2).contains("HDFS partitions=2/10 files=2 size=2B"));
     Assert.assertTrue("Scan node explain string does not correct S3 metadata",
         explainString.get(3).contains("S3 partitions=2/10 files=2 size=2B"));
+    Assert.assertTrue("Scan node explain string does not correct OSS metadata",
+        explainString.get(3).contains("OSS partitions=2/10 files=2 size=2B"));
   }
 
   private TupleDescriptor createMockTupleDescriptor(FeFsTable mockFeFsTable) {

@@ -32,6 +32,7 @@ from tests.util.filesystem_utils import (
     IS_ADLS,
     IS_GCS,
     IS_COS,
+    IS_OSS,
     IS_EC,
     IS_HDFS,
     IS_ISILON,
@@ -76,9 +77,9 @@ class SkipIfFS:
       reason="Tests rely on HDFS qualified paths, IMPALA-1872")
   no_partial_listing = pytest.mark.skipif(not IS_HDFS,
       reason="Tests rely on HDFS partial listing.")
-  variable_listing_times = pytest.mark.skipif(IS_S3 or IS_GCS or IS_COS,
+  variable_listing_times = pytest.mark.skipif(IS_S3 or IS_GCS or IS_COS or IS_OSS,
       reason="Flakiness due to unpredictable listing times on S3.")
-  eventually_consistent = pytest.mark.skipif(IS_ADLS or IS_COS,
+  eventually_consistent = pytest.mark.skipif(IS_ADLS or IS_COS or IS_OSS,
       reason="The client is slow to realize changes to file metadata")
 
 class SkipIfKudu:
